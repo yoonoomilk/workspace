@@ -1,7 +1,9 @@
 @ECHO OFF
 
-if exist exec\main.exe (
-  exec\clock
+fc main.cpp backup.cpp > nul
+
+if errorlevel 1 (
+  frun
 ) else (
-  echo no main.exe
+  exec\clock
 )

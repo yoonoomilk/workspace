@@ -10,6 +10,4 @@ int main() {
   for(int tc = 1;tc <= t;tc++) {
 
   }
-
-
 }
