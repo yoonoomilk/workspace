@@ -1,0 +1,18 @@
+{
+  "files.associations": {
+    "*.kt": "kotlin",
+    "iosfwd": "cpp",
+    "iostream": "cpp",
+    "deque": "cpp",
+    "string": "cpp",
+    "vector": "cpp",
+    "array": "cpp",
+    "bitset": "cpp",
+    "random": "cpp",
+    "cmath": "cpp",
+    "chrono": "cpp",
+    "limits": "cpp",
+    "valarray": "cpp",
+    "numeric": "cpp"
+  }
+}
