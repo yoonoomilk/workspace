@@ -3,3 +3,4 @@ backup.cpp
 main.cpp
 main.c
 exec/main.exe
+.vscode/settings.json
