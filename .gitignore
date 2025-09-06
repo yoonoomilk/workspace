@@ -1,7 +1,11 @@
 stdin.txt
+stdout.txt
+
 backup.cpp
 main.cpp
 main.c
+
 exec/main.exe
+
 .vscode/settings.json
 .vscode/c_cpp_properties.json

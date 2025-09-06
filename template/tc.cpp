@@ -6,7 +6,7 @@ int main() {
   cin.tie(0);
 
   int t; cin >> t;
-  for(int tc = 1;tc <= t;tc++) {
+  while(t--) {
 
   }
 }
