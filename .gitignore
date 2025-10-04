@@ -1,10 +1,10 @@
 stdin.txt
 stdout.txt
 
-backup.cpp
 main.cpp
 main.c
 
+exec/backup.cpp
 exec/main.exe
 
 .vscode/settings.json
