@@ -1,0 +1,33 @@
+{
+	"version": "2.0.0",
+	"tasks": [
+		{
+			"type": "shell",
+			"label": "workspace run",
+			"command": "${workspaceFolder}/exec/run.bat",
+			"presentation": {
+				"focus": true,
+				"showReuseMessage": false
+			}
+		},
+		{
+			"type": "shell",
+			"label": "workspace frun",
+			"command": "${workspaceFolder}/exec/frun.bat",
+			"presentation": {
+				"focus": true,
+				"showReuseMessage": false
+			}
+		},
+		{
+			"type": "shell",
+			"label": "workspace template",
+			"command": "${workspaceFolder}/exec/template.bat",
+			"presentation": {
+				"focus": true,
+				"showReuseMessage": false,
+        "close": true
+			}
+		}
+	]
+}
