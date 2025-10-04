@@ -7,7 +7,7 @@ if not exist exec\main.exe (
 fc main.cpp exec\backup.cpp > nul
 
 if errorlevel 1 (
-  frun
+  exec\frun
 ) else (
   exec\clock
 )
