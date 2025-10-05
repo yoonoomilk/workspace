@@ -1,7 +1,7 @@
 @ECHO OFF
 
 if not exist exec\main.exe (
-  frun
+  exec\frun
 )
 
 fc main.cpp exec\backup.cpp > nul
