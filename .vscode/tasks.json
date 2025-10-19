@@ -25,8 +25,7 @@
 			"command": "${workspaceFolder}/exec/template.bat",
 			"presentation": {
 				"focus": true,
-				"showReuseMessage": false,
-        "close": true
+				"showReuseMessage": false
 			}
 		}
 	]
