@@ -1,6 +1,4 @@
 @ECHO OFF
 
 git submodule update --remote --merge
-git add .
-git commit -m "update submodule"
-git push
+exec\gen_snippets.py
