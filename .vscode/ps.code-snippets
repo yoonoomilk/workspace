@@ -249,23 +249,6 @@
     ],
     "description": "ccw.cpp template"
   },
-  "cross-double.cpp": {
-    "prefix": "cross-double.cpp",
-    "body": [
-      "bool cross(point p1, point p2, point p3, point p4) {",
-      "  if(abs((p2 - p1) / (p4 - p3)) < 1e-10) return false;",
-      "  int l1 = ccw(p1, p2, p3) * ccw(p1, p2, p4);",
-      "  int l2 = ccw(p3, p4, p1) * ccw(p3, p4, p2);",
-      "  if(l1 == 0 && l2 == 0){",
-      "    if(p2 < p1) swap(p1, p2);",
-      "    if(p4 < p3) swap(p3, p4);",
-      "    return !(p2 < p3 || p4 < p1);",
-      "  }",
-      "  return l1 <= 0 && l2 <= 0;",
-      "}"
-    ],
-    "description": "cross-double.cpp template"
-  },
   "cross.cpp": {
     "prefix": "cross.cpp",
     "body": [
@@ -287,71 +270,6 @@
       "}"
     ],
     "description": "cross.cpp template"
-  },
-  "intersection-double.cpp": {
-    "prefix": "intersection-double.cpp",
-    "body": [
-      "point intersection(point p1, point p2, point p3, point p4) {",
-      "  double d = (p2 - p1) / (p4 - p3);",
-      "  return p1 + (p2 - p1) * ((p3 - p1) / (p4 - p3) / d);",
-      "}"
-    ],
-    "description": "intersection-double.cpp template"
-  },
-  "intersection.cpp": {
-    "prefix": "intersection.cpp",
-    "body": [
-      "// only if cross() == 1",
-      "pair<double, double> intersection(point p1, point p2, point p3, point p4) {",
-      "  ll l1 = (ll)p1.x * p2.y - (ll)p1.y * p2.x, l2 = (ll)p3.x * p4.y - (ll)p3.y * p4.x;",
-      "  double px = l1 * (p3.x - p4.x) - l2 * (p1.x - p2.x), py = l1 * (p3.y - p4.y) - l2 * (p1.y - p2.y);",
-      "  ll d = (ll)(p1.x - p2.x) * (p3.y - p4.y) - (ll)(p1.y - p2.y) * (p3.x - p4.x);",
-      "  if(d == 0) {",
-      "    if(p1 == p3 || p1 == p4) return {p1.x, p1.y};",
-      "    if(p2 == p3 || p2 == p4) return {p2.x, p2.y};",
-      "  }",
-      "  return {px / d, py / d};",
-      "}"
-    ],
-    "description": "intersection.cpp template"
-  },
-  "point-double.cpp": {
-    "prefix": "point-double.cpp",
-    "body": [
-      "struct point {",
-      "  double x, y;",
-      "  point operator+ (const point v) const { return {x + v.x, y + v.y}; }",
-      "  point operator- (const point v) const { return {x - v.x, y - v.y}; }",
-      "  double operator/ (const point v) const { return x * v.y - y * v.x; }",
-      "  point operator* (const double v) const { return {x * v, y * v}; }",
-      "  point operator/ (const double v) const { return {x / v, y / v}; }",
-      "  bool operator< (const point v) const { return x != v.x ? x < v.x : y < v.y; }",
-      "  double size() const { return hypot(x, y); }",
-      "  friend istream& operator>> (istream& cin, point& v) { return cin >> v.x >> v.y; }",
-      "  friend ostream& operator<< (ostream& cout, point& v) { return cout << v.x << ' '<< v.y; }",
-      "};",
-      "using polygon = vector<point>;"
-    ],
-    "description": "point-double.cpp template"
-  },
-  "point.cpp": {
-    "prefix": "point.cpp",
-    "body": [
-      "struct point {",
-      "  int x, y;",
-      "  point operator+ (const point v) const { return {x + v.x, y + v.y}; }",
-      "  point operator- (const point v) const { return {x - v.x, y - v.y}; }",
-      "  bool operator== (const point v) const { return x == v.x && y == v.y; }",
-      "  bool operator!= (const point v) const { return x != v.x || y != v.y; }",
-      "  bool operator< (const point v) const { return x != v.x ? x < v.x : y < v.y; }",
-      "  bool operator<= (const point v) const { return *this < v || *this == v; }",
-      "  ll size() const { return (ll)x * x + (ll)y * y; }",
-      "  friend istream& operator>> (istream& cin, point& v) { return cin >> v.x >> v.y; }",
-      "  friend ostream& operator<< (ostream& cout, point& v) { return cout << v.x << ' '<< v.y; }",
-      "};",
-      "using polygon = vector<point>;"
-    ],
-    "description": "point.cpp template"
   },
   "rotating_calipers-pair.cpp": {
     "prefix": "rotating_calipers-pair.cpp",
@@ -388,6 +306,116 @@
       "};"
     ],
     "description": "rotating_calipers.cpp template"
+  },
+  "cross-double.cpp": {
+    "prefix": "cross-double.cpp",
+    "body": [
+      "bool cross(point p1, point p2, point p3, point p4) {",
+      "  if(abs((p2 - p1) / (p4 - p3)) < 1e-9) return false;",
+      "  int l1 = ccw(p1, p2, p3) * ccw(p1, p2, p4);",
+      "  int l2 = ccw(p3, p4, p1) * ccw(p3, p4, p2);",
+      "  if(l1 == 0 && l2 == 0){",
+      "    if(p2 < p1) swap(p1, p2);",
+      "    if(p4 < p3) swap(p3, p4);",
+      "    return !(p2 < p3 || p4 < p1);",
+      "  }",
+      "  return l1 <= 0 && l2 <= 0;",
+      "}"
+    ],
+    "description": "cross-double.cpp template"
+  },
+  "intersection-double.cpp": {
+    "prefix": "intersection-double.cpp",
+    "body": [
+      "bool intersection(line& a, line& b, point& v) {",
+      "  double d = (a.t - a.s) / (b.t - b.s);",
+      "  if(abs(d) < 1e-9) return false;",
+      "  v = a.s + (a.t - a.s) * ((b.s - a.s) / (b.t - b.s) / d);",
+      "  return true;",
+      "}"
+    ],
+    "description": "intersection-double.cpp template"
+  },
+  "intersection-lines.cpp": {
+    "prefix": "intersection-lines.cpp",
+    "body": [
+      "polygon intersection(vector<line>& lines) {",
+      "  auto bad = [](line& a, line& b, line& c) {",
+      "    point v;",
+      "    if(!intersection(a, b, v)) return false;",
+      "    double d = (c.t - c.s)/ (v - c.s);",
+      "    return d < 1e-9;",
+      "  };",
+      "  sort(lines.begin(), lines.end());",
+      "  vector<line> unique_lines;",
+      "  for(line i : lines) {",
+      "    if(unique_lines.size()) {",
+      "      line& prev = unique_lines.back();",
+      "      double d = (prev.t - prev.s) / (i.t - i.s);",
+      "      if(abs(d) < 1e-9) {",
+      "        if((prev.t - prev.s) / (i.s - prev.s) > 0) prev = i;",
+      "        continue;",
+      "      }",
+      "    }",
+      "    unique_lines.push_back(i);",
+      "  }",
+      "  lines = unique_lines;",
+      "  deque<line> dq;",
+      "  for(int i = 0;i < lines.size();i++) {",
+      "    while(dq.size() >= 2 && bad(dq[dq.size() - 2], dq.back(), lines[i])) dq.pop_back();",
+      "    while(dq.size() >= 2 && bad(dq[0], dq[1], lines[i])) dq.pop_front();",
+      "    if(dq.size() < 2 || !bad(dq.back(), lines[i], dq[0])) dq.push_back(lines[i]);",
+      "  }",
+      "  polygon tmp;",
+      "  if(dq.size() >= 3) for(int i = 0;i < dq.size();i++) {",
+      "    point v;",
+      "    if(intersection(dq[i], dq[(i + 1) % dq.size()], v)) tmp.push_back(v);",
+      "  }",
+      "  return tmp;",
+      "}"
+    ],
+    "description": "intersection-lines.cpp template"
+  },
+  "point-double.cpp": {
+    "prefix": "point-double.cpp",
+    "body": [
+      "struct point {",
+      "  double x, y;",
+      "  point operator+ (const point v) const { return {x + v.x, y + v.y}; }",
+      "  point operator- (const point v) const { return {x - v.x, y - v.y}; }",
+      "  double operator/ (const point v) const { return x * v.y - y * v.x; }",
+      "  point operator* (const double v) const { return {x * v, y * v}; }",
+      "  point operator/ (const double v) const { return {x / v, y / v}; }",
+      "  bool operator< (const point v) const { return x != v.x ? x < v.x : y < v.y; }",
+      "  double size() const { return hypot(x, y); }",
+      "  friend istream& operator>> (istream& cin, point& v) { return cin >> v.x >> v.y; }",
+      "  friend ostream& operator<< (ostream& cout, point& v) { return cout << v.x << ' '<< v.y; }",
+      "};",
+      "struct line { point s, t; };",
+      "using polygon = vector<point>;"
+    ],
+    "description": "point-double.cpp template"
+  },
+  "point.cpp": {
+    "prefix": "point.cpp",
+    "body": [
+      "struct point {",
+      "  int x, y;",
+      "  point operator+ (const point v) const { return {x + v.x, y + v.y}; }",
+      "  point operator- (const point v) const { return {x - v.x, y - v.y}; }",
+      "  double operator/ (const point v) const { return x * v.y - y * v.x; }",
+      "  bool operator== (const point v) const { return x == v.x && y == v.y; }",
+      "  bool operator!= (const point v) const { return x != v.x || y != v.y; }",
+      "  bool operator< (const point v) const { return x != v.x ? x < v.x : y < v.y; }",
+      "  bool operator<= (const point v) const { return *this < v || *this == v; }",
+      "  ll size() const { return (ll)x * x + (ll)y * y; }",
+      "  friend istream& operator>> (istream& cin, point& v) { return cin >> v.x >> v.y; }",
+      "  friend ostream& operator<< (ostream& cout, point& v) { return cout << v.x << ' '<< v.y; }",
+      "};",
+      "struct line { point s, t; };",
+      "using polygon = vector<point>;"
+    ],
+    "description": "point.cpp template"
   },
   "lca.cpp": {
     "prefix": "lca.cpp",
@@ -1369,58 +1397,6 @@
     ],
     "description": "fft.cpp template"
   },
-  "fraction.cpp": {
-    "prefix": "fraction.cpp",
-    "body": [
-      "class fraction {",
-      "  ll n, d;",
-      "public:",
-      "  fraction(ll a = 0, ll b = 1) : n(a), d(b) {",
-      "    assert(d != 0);",
-      "    ll g = gcd(a, b);",
-      "    n /= g;",
-      "    d /= g;",
-      "  }",
-      "",
-      "  fraction operator+ (fraction v) { return fraction(n * v.d + d * v.n, d * v.d); }",
-      "  fraction operator+= (fraction v) { return *this + v; }",
-      "  fraction operator- (fraction v) { return fraction(n * v.d - d * v.n, d * v.d); }",
-      "  fraction operator-= (fraction v) { return *this - v; }",
-      "  fraction operator* (fraction v) { return fraction(n * v.n, d * v.d); }",
-      "  fraction operator*= (fraction v) { return *this * v; }",
-      "  fraction operator/ (fraction v) { return fraction(n * v.d, d * v.n); }",
-      "  fraction operator/= (fraction v) { return *this / v; }",
-      "  fraction operator- () { return fraction(-n, d); }",
-      "",
-      "  strong_ordering operator<=> (fraction v) { return n * v.d <=> d * v.n; }",
-      "",
-      "  explicit operator bool() { return n != 0; }",
-      "  explicit operator double() { return (double)n / d; }",
-      "",
-      "  friend ostream& operator<< (ostream& cout, fraction& v) { return cout << v.n << '/'<< v.d; }",
-      "",
-      "  friend ll floor(fraction v) { return v.n / v.d - ((v.n % v.d != 0) && ((v.n < 0) != (v.d < 0))); }",
-      "  friend ll ceil(fraction v) { return v.n / v.d + ((v.n % v.d != 0) && ((v.n > 0) == (v.d > 0))); }",
-      "  friend ll round(fraction v) { return (v.n + v.d / 2 * ((v.n > 0) == (v.d > 0))) / v.d; }",
-      "  friend fraction abs(fraction v) { return fraction(abs(v.n), abs(v.d)); }",
-      "",
-      "  friend struct formatter<fraction>;",
-      "};",
-      "",
-      "namespace std {",
-      "  template <>",
-      "  struct formatter<fraction> : formatter<string_view> {",
-      "    auto format(fraction f, auto& ctx) {",
-      "      return formatter<string_view>::format(",
-      "        string_view(to_string(f.n) + \"/\" + to_string(f.d)),",
-      "        ctx",
-      "      );",
-      "    }",
-      "  };",
-      "}"
-    ],
-    "description": "fraction.cpp template"
-  },
   "matrix.cpp": {
     "prefix": "matrix.cpp",
     "body": [
@@ -1621,6 +1597,48 @@
       "}"
     ],
     "description": "_pow.cpp template"
+  },
+  "fraction.cpp": {
+    "prefix": "fraction.cpp",
+    "body": [
+      "class fraction {",
+      "  ll n, d;",
+      "public:",
+      "  fraction(ll a = 0, ll b = 1) : n(a), d(b) {",
+      "    assert(d != 0);",
+      "    ll g = gcd(a, b);",
+      "    n /= g;",
+      "    d /= g;",
+      "  }",
+      "",
+      "  fraction operator+ (fraction v) { return fraction(n * v.d + d * v.n, d * v.d); }",
+      "  fraction operator+= (fraction v) { return *this = *this + v; }",
+      "  fraction operator- (fraction v) { return fraction(n * v.d - d * v.n, d * v.d); }",
+      "  fraction operator-= (fraction v) { return *this = *this - v; }",
+      "  fraction operator* (fraction v) { return fraction(n * v.n, d * v.d); }",
+      "  fraction operator*= (fraction v) { return *this = *this * v; }",
+      "  fraction operator/ (fraction v) { return fraction(n * v.d, d * v.n); }",
+      "  fraction operator/= (fraction v) { return *this = *this / v; }",
+      "  fraction operator- () { return fraction(-n, d); }",
+      "",
+      "  strong_ordering operator<=> (fraction v) { return n * v.d <=> d * v.n; }",
+      "",
+      "  explicit operator bool() { return n != 0; }",
+      "  explicit operator double() { return (double)n / d; }",
+      "",
+      "  friend istream& operator>> (istream& cin, fraction& v) {",
+      "    v.d = 1;",
+      "    return cin >> v.n;",
+      "  }",
+      "  friend ostream& operator<< (ostream& cout, fraction& v) { return cout << v.n << '/'<< v.d; }",
+      "",
+      "  friend ll floor(fraction v) { return v.n / v.d - ((v.n % v.d != 0) && ((v.n < 0) != (v.d < 0))); }",
+      "  friend ll ceil(fraction v) { return v.n / v.d + ((v.n % v.d != 0) && ((v.n > 0) == (v.d > 0))); }",
+      "  friend ll round(fraction v) { return (v.n + v.d / 2 * ((v.n > 0) == (v.d > 0))) / v.d; }",
+      "  friend fraction abs(fraction v) { return fraction(abs(v.n), abs(v.d)); }",
+      "};"
+    ],
+    "description": "fraction.cpp template"
   },
   "pollard_rho.cpp": {
     "prefix": "pollard_rho.cpp",

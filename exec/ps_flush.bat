@@ -1,4 +1,4 @@
 @ECHO OFF
 
-git submodule update --remote --merge > nul
+git submodule update --remote --merge
 exec\gen_snippets.py
