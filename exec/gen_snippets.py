@@ -23,4 +23,4 @@ for root, dirs, files in os.walk(TEMPLATE_FOLDER):
 with open(OUTPUT_FILE, "w", encoding="utf-8") as f:
   json.dump(snippets, f, indent=2, ensure_ascii=False)
 
-print(f"vscode snippets saved to {OUTPUT_FILE}")
+print(f"saved {len(snippets)} templates")

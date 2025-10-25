@@ -1,28 +1,4 @@
 {
-  "eraseable_pq.cpp": {
-    "prefix": "eraseable_pq.cpp",
-    "body": [
-      "template <typename T, typename comp = less<T>>",
-      "class eraseable_pq {",
-      "  priority_queue<T, vector<T>, comp> pq, del;",
-      "",
-      "  void flush() {",
-      "    while(del.size() && pq.top() == del.top()) {",
-      "      pq.pop();",
-      "      del.pop();",
-      "    }",
-      "  }",
-      "public:",
-      "  eraseable_pq() {}",
-      "  size_t size() { return pq.size() - del.size(); };",
-      "  void insert(T v) { pq.push(v); flush(); }",
-      "  void erase(T v) { del.push(v); flush(); }",
-      "  void pop() { del.pop(); flush(); }",
-      "  const T& top() { return pq.top(); }",
-      "};"
-    ],
-    "description": "eraseable_pq.cpp template"
-  },
   "radix_sort.cpp": {
     "prefix": "radix_sort.cpp",
     "body": [
@@ -101,6 +77,48 @@
     ],
     "description": "trie-for_xor.cpp template"
   },
+  "eraseable_pq.cpp": {
+    "prefix": "eraseable_pq.cpp",
+    "body": [
+      "template <typename T, typename comp = less<T>>",
+      "class eraseable_pq {",
+      "  priority_queue<T, vector<T>, comp> pq, del;",
+      "  void flush() { while(del.size() && pq.top() == del.top()) pq.pop(), del.pop(); }",
+      "public:",
+      "  eraseable_pq() {}",
+      "  size_t size() { return pq.size() - del.size(); };",
+      "  void insert(T v) { pq.push(v); flush(); }",
+      "  void erase(T v) { del.push(v); flush(); }",
+      "  void pop() { del.pop(); flush(); }",
+      "  const T& top() { return pq.top(); }",
+      "};"
+    ],
+    "description": "eraseable_pq.cpp template"
+  },
+  "union_find-directed.cpp": {
+    "prefix": "union_find-directed.cpp",
+    "body": [
+      "class union_find {",
+      "  const int sz;",
+      "  vector<int> pa;",
+      "",
+      "public:",
+      "  union_find(int n) : sz(n + 1), pa(sz, -1) {}",
+      "",
+      "  int find(int i) { return pa[i] < 0 ? i : pa[i] = find(pa[i]); }",
+      "  bool merge(int a, int b) {",
+      "    a = find(a), b = find(b);",
+      "    if(a == b) return false;",
+      "    pa[a] += pa[b];",
+      "    pa[b] = a;",
+      "    return true;",
+      "  }",
+      "  bool same(int a, int b) { return find(a) == find(b); }",
+      "  int size(int i) { return -pa[find(i)]; }",
+      "};"
+    ],
+    "description": "union_find-directed.cpp template"
+  },
   "union_find.cpp": {
     "prefix": "union_find.cpp",
     "body": [
@@ -121,24 +139,7 @@
       "    return true;",
       "  }",
       "  bool same(int a, int b) { return find(a) == find(b); }",
-      "};",
-      "",
-      "// direction defined",
-      "class union_find {",
-      "  const int sz;",
-      "  vector<int> pa;",
-      "",
-      "public:",
-      "  union_find(int n) : sz(n + 1), pa(sz, -1) {}",
-      "",
-      "  int find(int i) { return pa[i] < 0 ? i : pa[i] = find(pa[i]); }",
-      "  bool merge(int a, int b) {",
-      "    a = find(a), b = find(b);",
-      "    if(a == b) return false;",
-      "    pa[b] = a;",
-      "    return true;",
-      "  }",
-      "  bool same(int a, int b) { return find(a) == find(b); }",
+      "  int size(int i) { return -pa[find(i)]; }",
       "};"
     ],
     "description": "union_find.cpp template"
@@ -200,8 +201,22 @@
     ],
     "description": "point_in_polygon.cpp template"
   },
-  "polygon_area.cpp": {
-    "prefix": "polygon_area.cpp",
+  "area-double.cpp": {
+    "prefix": "area-double.cpp",
+    "body": [
+      "double area(polygon& poly) {",
+      "  double tmp = 0;",
+      "  for(int i = 0;i < poly.size();i++) {",
+      "    point bef = i ? poly[i - 1] : poly.back();",
+      "    tmp += bef.x * poly[i].y - bef.y * poly[i].x;",
+      "  }",
+      "  return abs(tmp) / 2;",
+      "}"
+    ],
+    "description": "area-double.cpp template"
+  },
+  "area.cpp": {
+    "prefix": "area.cpp",
     "body": [
       "ll area2(polygon& poly) {",
       "  ll tmp = 0;",
@@ -212,10 +227,134 @@
       "  return abs(tmp);",
       "}"
     ],
-    "description": "polygon_area.cpp template"
+    "description": "area.cpp template"
   },
-  "rotating_calipers.cpp": {
-    "prefix": "rotating_calipers.cpp",
+  "ccw-double.cpp": {
+    "prefix": "ccw-double.cpp",
+    "body": [
+      "int ccw(point a, point b, point c) {",
+      "  double s = (b - a) / (c - b);",
+      "  return (s > 0) - (s < 0);",
+      "}"
+    ],
+    "description": "ccw-double.cpp template"
+  },
+  "ccw.cpp": {
+    "prefix": "ccw.cpp",
+    "body": [
+      "int ccw(point a, point b, point c) {",
+      "  ll s = (ll)(b.x - a.x) * (c.y - a.y) - (ll)(b.y - a.y) * (c.x - a.x);",
+      "  return (s > 0) - (s < 0);",
+      "}"
+    ],
+    "description": "ccw.cpp template"
+  },
+  "cross-double.cpp": {
+    "prefix": "cross-double.cpp",
+    "body": [
+      "bool cross(point p1, point p2, point p3, point p4) {",
+      "  if(abs((p2 - p1) / (p4 - p3)) < 1e-10) return false;",
+      "  int l1 = ccw(p1, p2, p3) * ccw(p1, p2, p4);",
+      "  int l2 = ccw(p3, p4, p1) * ccw(p3, p4, p2);",
+      "  if(l1 == 0 && l2 == 0){",
+      "    if(p2 < p1) swap(p1, p2);",
+      "    if(p4 < p3) swap(p3, p4);",
+      "    return !(p2 < p3 || p4 < p1);",
+      "  }",
+      "  return l1 <= 0 && l2 <= 0;",
+      "}"
+    ],
+    "description": "cross-double.cpp template"
+  },
+  "cross.cpp": {
+    "prefix": "cross.cpp",
+    "body": [
+      "int cross(point p1, point p2, point p3, point p4) {",
+      "  int l1 = ccw(p1, p2, p3) * ccw(p1, p2, p4);",
+      "  int l2 = ccw(p3, p4, p1) * ccw(p3, p4, p2);",
+      "  if(l1 == 0 && l2 == 0) {",
+      "    point d1 = p2 - p1, d2 = p4 - p3;",
+      "    if((ll)d1.x * d2.y != (ll)d1.y * d2.x) return 1;",
+      "    if(p2 < p1) swap(p1, p2);",
+      "    if(p4 < p3) swap(p3, p4);",
+      "    if(p3 < p1) {",
+      "      swap(p1, p3);",
+      "      swap(p2, p4);",
+      "    }",
+      "    return (p2 < p3 || p2 == p3) - (p2 != p3);",
+      "  }",
+      "  return l1 <= 0 && l2 <= 0;",
+      "}"
+    ],
+    "description": "cross.cpp template"
+  },
+  "intersection-double.cpp": {
+    "prefix": "intersection-double.cpp",
+    "body": [
+      "point intersection(point p1, point p2, point p3, point p4) {",
+      "  double d = (p2 - p1) / (p4 - p3);",
+      "  return p1 + (p2 - p1) * ((p3 - p1) / (p4 - p3) / d);",
+      "}"
+    ],
+    "description": "intersection-double.cpp template"
+  },
+  "intersection.cpp": {
+    "prefix": "intersection.cpp",
+    "body": [
+      "// only if cross() == 1",
+      "pair<double, double> intersection(point p1, point p2, point p3, point p4) {",
+      "  ll l1 = (ll)p1.x * p2.y - (ll)p1.y * p2.x, l2 = (ll)p3.x * p4.y - (ll)p3.y * p4.x;",
+      "  double px = l1 * (p3.x - p4.x) - l2 * (p1.x - p2.x), py = l1 * (p3.y - p4.y) - l2 * (p1.y - p2.y);",
+      "  ll d = (ll)(p1.x - p2.x) * (p3.y - p4.y) - (ll)(p1.y - p2.y) * (p3.x - p4.x);",
+      "  if(d == 0) {",
+      "    if(p1 == p3 || p1 == p4) return {p1.x, p1.y};",
+      "    if(p2 == p3 || p2 == p4) return {p2.x, p2.y};",
+      "  }",
+      "  return {px / d, py / d};",
+      "}"
+    ],
+    "description": "intersection.cpp template"
+  },
+  "point-double.cpp": {
+    "prefix": "point-double.cpp",
+    "body": [
+      "struct point {",
+      "  double x, y;",
+      "  point operator+ (const point v) const { return {x + v.x, y + v.y}; }",
+      "  point operator- (const point v) const { return {x - v.x, y - v.y}; }",
+      "  double operator/ (const point v) const { return x * v.y - y * v.x; }",
+      "  point operator* (const double v) const { return {x * v, y * v}; }",
+      "  point operator/ (const double v) const { return {x / v, y / v}; }",
+      "  bool operator< (const point v) const { return x != v.x ? x < v.x : y < v.y; }",
+      "  double size() const { return hypot(x, y); }",
+      "  friend istream& operator>> (istream& cin, point& v) { return cin >> v.x >> v.y; }",
+      "  friend ostream& operator<< (ostream& cout, point& v) { return cout << v.x << ' '<< v.y; }",
+      "};",
+      "using polygon = vector<point>;"
+    ],
+    "description": "point-double.cpp template"
+  },
+  "point.cpp": {
+    "prefix": "point.cpp",
+    "body": [
+      "struct point {",
+      "  int x, y;",
+      "  point operator+ (const point v) const { return {x + v.x, y + v.y}; }",
+      "  point operator- (const point v) const { return {x - v.x, y - v.y}; }",
+      "  bool operator== (const point v) const { return x == v.x && y == v.y; }",
+      "  bool operator!= (const point v) const { return x != v.x || y != v.y; }",
+      "  bool operator< (const point v) const { return x != v.x ? x < v.x : y < v.y; }",
+      "  bool operator<= (const point v) const { return *this < v || *this == v; }",
+      "  ll size() const { return (ll)x * x + (ll)y * y; }",
+      "  friend istream& operator>> (istream& cin, point& v) { return cin >> v.x >> v.y; }",
+      "  friend ostream& operator<< (ostream& cout, point& v) { return cout << v.x << ' '<< v.y; }",
+      "};",
+      "using polygon = vector<point>;"
+    ],
+    "description": "point.cpp template"
+  },
+  "rotating_calipers-pair.cpp": {
+    "prefix": "rotating_calipers-pair.cpp",
     "body": [
       "pair<point, point> rotating_calipers(polygon& poly) {",
       "  int sz = poly.size();",
@@ -228,8 +367,13 @@
       "    tmp = max(tmp, {dist2(poly[i] - poly[j % sz]), {poly[i], poly[j % sz]}});",
       "  }",
       "  return tmp.second;",
-      "};",
-      "",
+      "};"
+    ],
+    "description": "rotating_calipers-pair.cpp template"
+  },
+  "rotating_calipers.cpp": {
+    "prefix": "rotating_calipers.cpp",
+    "body": [
       "ll rotating_calipers(polygon& poly) {",
       "  int sz = poly.size();",
       "  ll tmp = dist2(poly[0] - poly[1]);",
@@ -244,43 +388,6 @@
       "};"
     ],
     "description": "rotating_calipers.cpp template"
-  },
-  "ett.cpp": {
-    "prefix": "ett.cpp",
-    "body": [
-      "int in[100005], out[100005];",
-      "",
-      "void ett(int cur) {",
-      "  in[cur] = ++ettn;",
-      "  for(int i : raw[cur]) if(!in[i]) ett(i);",
-      "  out[cur] = ettn;",
-      "}",
-      "",
-      "int arr[200005], in[100005], out[100005];",
-      "",
-      "void ett(int cur, int pa) {",
-      "  arr[ettn] = cur;",
-      "  in[cur] = ettn++;",
-      "  for(int i : raw[cur]) if(i != pa) ett(i, cur);",
-      "  arr[ettn] = cur;",
-      "  out[cur] = ettn++;",
-      "}",
-      "",
-      "void ett(int cur, int pa) {",
-      "  arr[ettn] = cur;",
-      "  cnt[cur][0]++;",
-      "  in[cur] = ettn++;",
-      "  for(int i : raw[cur]) if(i != pa) {",
-      "    ett(i, cur);",
-      "    arr[ettn++] = cur;",
-      "    cnt[cur][0]++;",
-      "  }",
-      "  arr[ettn] = cur;",
-      "  cnt[cur][0]++;",
-      "  out[cur] = ettn++;",
-      "}"
-    ],
-    "description": "ett.cpp template"
   },
   "lca.cpp": {
     "prefix": "lca.cpp",
@@ -331,10 +438,82 @@
     ],
     "description": "lca.cpp template"
   },
-  "scc.cpp": {
-    "prefix": "scc.cpp",
+  "two_sat-short.cpp": {
+    "prefix": "two_sat-short.cpp",
     "body": [
-      "// dag",
+      "class two_sat {",
+      "  const int sz;",
+      "  strongly_connected_component scc;",
+      "",
+      "public:",
+      "  two_sat(int n) : sz(n + 1), scc(sz * 2 + 1) {}",
+      "",
+      "  void add(int a, int b) {",
+      "    if(a > 0) a = a * 2;",
+      "    else a = -a * 2 + 1;",
+      "    if(b > 0) b = b * 2;",
+      "    else b = -b * 2 + 1;",
+      "    scc.add(a ^ 1, b);",
+      "    scc.add(b ^ 1, a);",
+      "  }",
+      "",
+      "  bool operator() () {",
+      "    bool flag = true;",
+      "    scc.init();",
+      "    for(int i = 1;i < sz && flag;i++) flag &= scc[i * 2] != scc[i * 2 + 1];",
+      "    return flag;",
+      "  }",
+      "};"
+    ],
+    "description": "two_sat-short.cpp template"
+  },
+  "two_sat.cpp": {
+    "prefix": "two_sat.cpp",
+    "body": [
+      "class two_sat {",
+      "  const int sz;",
+      "  strongly_connected_component scc;",
+      "  vector<char> ans;",
+      "",
+      "public:",
+      "  two_sat(int n) : sz(n + 1), scc(sz * 2 + 1), ans(sz * 2 + 1, -1) {}",
+      "",
+      "  void add(int a, int b) {",
+      "    if(a > 0) a = a * 2;",
+      "    else a = -a * 2 + 1;",
+      "    if(b > 0) b = b * 2;",
+      "    else b = -b * 2 + 1;",
+      "    scc.add(a ^ 1, b);",
+      "    scc.add(b ^ 1, a);",
+      "  }",
+      "",
+      "  bool operator() () {",
+      "    bool flag = true;",
+      "    scc.init();",
+      "    for(int i = 1;i < sz && flag;i++) flag &= scc[i * 2] != scc[i * 2 + 1];",
+      "    if(flag) {",
+      "      vector<pair<int, int>> arr(sz * 2 - 2);",
+      "      for(int i = 1;i < sz;i++) {",
+      "        arr[i * 2 - 2] = {scc[i * 2], i * 2};",
+      "        arr[i * 2 - 1] = {scc[i * 2 + 1], i * 2 + 1};",
+      "      }",
+      "      sort(arr.rbegin(), arr.rend());",
+      "      for(auto [_, a] : arr) if(ans[a] == -1) {",
+      "        ans[a] = 0;",
+      "        ans[a ^ 1] = 1;",
+      "      }",
+      "    }",
+      "    return flag;",
+      "  }",
+      "",
+      "  bool operator[] (int i) { return ans[i * 2]; }",
+      "};"
+    ],
+    "description": "two_sat.cpp template"
+  },
+  "scc-dag.cpp": {
+    "prefix": "scc-dag.cpp",
+    "body": [
       "class strongly_connected_component {",
       "  const int sz;",
       "  vector<vector<int>> edges;",
@@ -385,9 +564,13 @@
       "  }",
       "",
       "  int operator[] (int i) { return idx[i]; }",
-      "};",
-      "",
-      "// short ver",
+      "};"
+    ],
+    "description": "scc-dag.cpp template"
+  },
+  "scc-short.cpp": {
+    "prefix": "scc-short.cpp",
+    "body": [
       "class strongly_connected_component {",
       "  const int sz;",
       "  vector<vector<int>> edges;",
@@ -432,12 +615,12 @@
       "  int operator[] (int i) { return idx[i]; }",
       "};"
     ],
-    "description": "scc.cpp template"
+    "description": "scc-short.cpp template"
   },
   "static_graph.cpp": {
     "prefix": "static_graph.cpp",
     "body": [
-      "//TODO",
+      "// TODO",
       "",
       "template <typename T>",
       "class static_graph {",
@@ -525,79 +708,6 @@
       "};"
     ],
     "description": "static_graph.cpp template"
-  },
-  "two_sat-short.cpp": {
-    "prefix": "two_sat-short.cpp",
-    "body": [
-      "class two_sat {",
-      "  const int sz;",
-      "  strongly_connected_component scc;",
-      "",
-      "public:",
-      "  two_sat(int n) : sz(n + 1), scc(sz * 2 + 1) {}",
-      "",
-      "  void add(int a, int b) {",
-      "    if(a > 0) a = a * 2;",
-      "    else a = -a * 2 + 1;",
-      "    if(b > 0) b = b * 2;",
-      "    else b = -b * 2 + 1;",
-      "    scc.add(a ^ 1, b);",
-      "    scc.add(b ^ 1, a);",
-      "  }",
-      "",
-      "  bool operator() () {",
-      "    bool flag = true;",
-      "    scc.init();",
-      "    for(int i = 1;i < sz && flag;i++) flag &= scc[i * 2] != scc[i * 2 + 1];",
-      "    return flag;",
-      "  }",
-      "};"
-    ],
-    "description": "two_sat-short.cpp template"
-  },
-  "two_sat.cpp": {
-    "prefix": "two_sat.cpp",
-    "body": [
-      "class two_sat {",
-      "  const int sz;",
-      "  strongly_connected_component scc;",
-      "  vector<char> ans;",
-      "",
-      "public:",
-      "  two_sat(int n) : sz(n + 1), scc(sz * 2 + 1), ans(sz * 2 + 1, -1) {}",
-      "",
-      "  void add(int a, int b) {",
-      "    if(a > 0) a = a * 2;",
-      "    else a = -a * 2 + 1;",
-      "    if(b > 0) b = b * 2;",
-      "    else b = -b * 2 + 1;",
-      "    scc.add(a ^ 1, b);",
-      "    scc.add(b ^ 1, a);",
-      "  }",
-      "",
-      "  bool operator() () {",
-      "    bool flag = true;",
-      "    scc.init();",
-      "    for(int i = 1;i < sz && flag;i++) flag &= scc[i * 2] != scc[i * 2 + 1];",
-      "    if(flag) {",
-      "      vector<pair<int, int>> arr(sz * 2 - 2);",
-      "      for(int i = 1;i < sz;i++) {",
-      "        arr[i * 2 - 2] = {scc[i * 2], i * 2};",
-      "        arr[i * 2 - 1] = {scc[i * 2 + 1], i * 2 + 1};",
-      "      }",
-      "      sort(arr.rbegin(), arr.rend());",
-      "      for(auto [_, a] : arr) if(ans[a] == -1) {",
-      "        ans[a] = 0;",
-      "        ans[a ^ 1] = 1;",
-      "      }",
-      "    }",
-      "    return flag;",
-      "  }",
-      "",
-      "  bool operator[] (int i) { return ans[i * 2]; }",
-      "};"
-    ],
-    "description": "two_sat.cpp template"
   },
   "bipartite_match-Hopcroft_Karp.cpp": {
     "prefix": "bipartite_match-Hopcroft_Karp.cpp",
@@ -1211,39 +1321,6 @@
     ],
     "description": "mcmf.cpp template"
   },
-  "combination.cpp": {
-    "prefix": "combination.cpp",
-    "body": [
-      "using ll = long long;",
-      "",
-      "template <int sz, int mod = 1'000'000'007>",
-      "class combination {",
-      "  int fact[sz + 1], inv[sz + 1];",
-      "",
-      "  static constexpr int _pow(ll n, int exp) {",
-      "    ll tmp = 1;",
-      "    for(;exp;exp /= 2) {",
-      "      if (exp & 1) tmp = tmp * n % mod;",
-      "      n = (n * n) % mod;",
-      "    }",
-      "    return tmp;",
-      "  }",
-      "",
-      "public:",
-      "  constexpr combination() {",
-      "    fact[0] = 1;",
-      "    for(int i = 1;i <= sz;i++) fact[i] = (ll)fact[i - 1] * i % mod;",
-      "    inv[sz] = _pow(fact[sz], mod - 2);",
-      "    for(int i = sz;i;i--) inv[i - 1] = (ll)inv[i] * i % mod;",
-      "  }",
-      "",
-      "  ll operator() (int n, int r) const {",
-      "    return (ll)fact[n] * inv[r] % mod * inv[n - r] % mod;",
-      "  }",
-      "};"
-    ],
-    "description": "combination.cpp template"
-  },
   "fft.cpp": {
     "prefix": "fft.cpp",
     "body": [
@@ -1409,72 +1486,6 @@
     ],
     "description": "matrix.cpp template"
   },
-  "modint.cpp": {
-    "prefix": "modint.cpp",
-    "body": [
-      "using ll = long long;",
-      "",
-      "template <int mod = 1'000'000'007>",
-      "class modint {",
-      "  ll val;",
-      "",
-      "  modint _pow(ll exp) const {",
-      "    ll n = val, tmp = 1;",
-      "    for(;exp;exp /= 2) {",
-      "      if (exp & 1) tmp = tmp * n % mod;",
-      "      n = (n * n) % mod;",
-      "    }",
-      "    return modint(tmp);",
-      "  }",
-      "",
-      "  modint _inv() const {",
-      "    return _pow(mod - 2);",
-      "  }",
-      "",
-      "public:",
-      "  modint(ll n = 0) : val((n %= mod) < 0 ? n + mod : n) {}",
-      "",
-      "  modint operator+ (const modint v) {",
-      "    int tmp = val + v.val;",
-      "    if(tmp >= mod) tmp -= mod;",
-      "    return modint(tmp);",
-      "  }",
-      "  modint operator- (const modint v) {",
-      "    int tmp = val + mod - v.val;",
-      "    if(tmp >= mod) tmp -= mod;",
-      "    return modint(tmp);",
-      "  }",
-      "  modint operator* (const modint v) { return modint(val * v.val % mod); }",
-      "  modint operator/ (const modint v) { return *this * v._inv(); }",
-      "  modint operator- () { return modint(val ? mod - val : val); }",
-      "",
-      "  bool operator! () { return val == 0; }",
-      "  explicit operator bool() { return val != 0; }",
-      "",
-      "  friend istream& operator>> (istream& cin, modint& v) {",
-      "    cin >> v.val;",
-      "    if((v.val %= mod) < 0) v.val += mod;",
-      "    return cin;",
-      "  }",
-      "  friend ostream& operator<< (ostream& cout, const modint v) {",
-      "    cout << v.val;",
-      "    return cout;",
-      "  }",
-      "};",
-      "",
-      "template <int mod = 1'000'000'007>",
-      "modint<mod> comb(int n, int r) {",
-      "  if(r > n - r) r = n - r;",
-      "  modint<mod> x = 1, y = 1;",
-      "  for(int i = 0;i < r;i++) {",
-      "    x = x * (n - i);",
-      "    y = y * (i + 1);",
-      "  }",
-      "  return x / y;",
-      "}"
-    ],
-    "description": "modint.cpp template"
-  },
   "polynomial.cpp": {
     "prefix": "polynomial.cpp",
     "body": [
@@ -1493,6 +1504,79 @@
       "};"
     ],
     "description": "polynomial.cpp template"
+  },
+  "combination-modint.cpp": {
+    "prefix": "combination-modint.cpp",
+    "body": [
+      "modint combination(int n, int r) {",
+      "  if(r > n - r) r = n - r;",
+      "  modint x = 1, y = 1;",
+      "  for(int i = 0;i < r;i++) {",
+      "    x = x * (n - i);",
+      "    y = y * (i + 1);",
+      "  }",
+      "  return x / y;",
+      "}"
+    ],
+    "description": "combination-modint.cpp template"
+  },
+  "combination.cpp": {
+    "prefix": "combination.cpp",
+    "body": [
+      "template <int sz, int mod>",
+      "class combination {",
+      "  int fact[sz + 1], inv[sz + 1];",
+      "",
+      "  static constexpr int _pow(ll n, int exp) {",
+      "    ll tmp = 1;",
+      "    for(;exp;exp /= 2) {",
+      "      if (exp & 1) tmp = tmp * n % mod;",
+      "      n = (n * n) % mod;",
+      "    }",
+      "    return tmp;",
+      "  }",
+      "",
+      "public:",
+      "  constexpr combination() {",
+      "    fact[0] = 1;",
+      "    for(int i = 1;i <= sz;i++) fact[i] = (ll)fact[i - 1] * i % mod;",
+      "    inv[sz] = _pow(fact[sz], mod - 2);",
+      "    for(int i = sz;i;i--) inv[i - 1] = (ll)inv[i] * i % mod;",
+      "  }",
+      "",
+      "  ll operator() (int n, int r) const {",
+      "    return (ll)fact[n] * inv[r] % mod * inv[n - r] % mod;",
+      "  }",
+      "};"
+    ],
+    "description": "combination.cpp template"
+  },
+  "modint.cpp": {
+    "prefix": "modint.cpp",
+    "body": [
+      "template <int mod>",
+      "class _modint {",
+      "  ll val;",
+      "",
+      "public:",
+      "  _modint(ll n = 0) : val((n %= mod) < 0 ? n + mod : n) {}",
+      "",
+      "  _modint operator+ (const _modint v) { return _modint(val + v.val); }",
+      "  _modint operator- (const _modint v) { return _modint(val - v.val); }",
+      "  _modint operator* (const _modint v) { return _modint(val * v.val); }",
+      "  _modint operator/ (const _modint v) { return _modint(val * _pow(v.val, mod - 2)); }",
+      "  _modint operator- () { return _modint(val ? mod - val : val); }",
+      "",
+      "  friend istream& operator>> (istream& cin, _modint& v) {",
+      "    cin >> v.val;",
+      "    if((v.val %= mod) < 0) v.val += mod;",
+      "    return cin;",
+      "  }",
+      "  friend ostream& operator<< (ostream& cout, const _modint v) { return cout << v.val; }",
+      "};",
+      "using modint = _modint<mod>"
+    ],
+    "description": "modint.cpp template"
   },
   "steinhaus_johnson_trotter.cpp": {
     "prefix": "steinhaus_johnson_trotter.cpp",
@@ -1520,28 +1604,12 @@
       "    int nxt = tmp + dir[tmp];",
       "    for(int i = 0;i < n;i++) if(s[i] > s[nxt]) dir[i] *= -1;",
       "  }",
-      "}",
-      "",
-      "//https://en.wikipedia.org/wiki/Steinhaus%E2%80%93Johnson%E2%80%93Trotter_algorithm"
+      "}"
     ],
     "description": "steinhaus_johnson_trotter.cpp template"
   },
   "_pow.cpp": {
     "prefix": "_pow.cpp",
-    "body": [
-      "ll _pow(ll n, ll exp, ll mod) {",
-      "  ll tmp = 1;",
-      "  for(;exp;exp /= 2) {",
-      "    if(exp & 1) tmp = tmp * n % mod;",
-      "    n = (n * n) % mod;",
-      "  }",
-      "  return tmp;",
-      "}"
-    ],
-    "description": "_pow.cpp template"
-  },
-  "miller_rabin.cpp": {
-    "prefix": "miller_rabin.cpp",
     "body": [
       "ll _pow(__int128 n, ll exp, ll mod) {",
       "  __int128 tmp = 1;",
@@ -1550,30 +1618,9 @@
       "    n = (n * n) % mod;",
       "  }",
       "  return tmp;",
-      "}",
-      "",
-      "bool miller_rabin(ll n) {",
-      "  if(n == 1) return false;",
-      "  if(n == 2) return true;",
-      "  for(ll a : {2, 325, 9375, 28178, 450775, 9780504, 1795265022}) if(a % n) {",
-      "    for(ll k = n - 1;;k /= 2) {",
-      "      ll tmp = _pow(a, k, n);",
-      "      if(tmp == n - 1) break;",
-      "      if(k % 2) {",
-      "        if(tmp == 1) break;",
-      "        else return false;",
-      "      }",
-      "    }",
-      "  }",
-      "  return true;",
-      "}",
-      "",
-      "/*",
-      "n <= 2^32 -> {2, 7, 61}",
-      "n <= 2^64 -> {2, 325, 9375, 28178, 450775, 9780504, 1795265022}",
-      "*/"
+      "}"
     ],
-    "description": "miller_rabin.cpp template"
+    "description": "_pow.cpp template"
   },
   "pollard_rho.cpp": {
     "prefix": "pollard_rho.cpp",
@@ -1610,10 +1657,17 @@
     ],
     "description": "pollard_rho.cpp template"
   },
-  "sieve.cpp": {
-    "prefix": "sieve.cpp",
+  "sieve-linear.cpp": {
+    "prefix": "sieve-linear.cpp",
     "body": [
-      "// segmented sieve",
+      "// TODO",
+      "// https://github.com/justiceHui/icpc-teamnote/blob/master/code/Math/LinearSieve.cpp"
+    ],
+    "description": "sieve-linear.cpp template"
+  },
+  "sieve-segment.cpp": {
+    "prefix": "sieve-segment.cpp",
+    "body": [
       "template <ll n, int chunk>",
       "class sieve {",
       "  bitset<chunk> is_prime;",
@@ -1648,12 +1702,30 @@
       "  ll operator[] (int i) { return primes[i - 1]; }",
       "  bool operator() (ll i) { return binary_search(primes.begin(), primes.end(), i); }",
       "  int count() {return primes.size(); }",
-      "};",
-      "",
-      "// linear sieve",
-      "// https://github.com/justiceHui/icpc-teamnote/blob/master/code/Math/LinearSieve.cpp"
+      "};"
     ],
-    "description": "sieve.cpp template"
+    "description": "sieve-segment.cpp template"
+  },
+  "miller_rabin.cpp": {
+    "prefix": "miller_rabin.cpp",
+    "body": [
+      "bool miller_rabin(ll n) {",
+      "  if(n == 1) return false;",
+      "  if(n == 2) return true;",
+      "  for(ll a : {2, 325, 9375, 28178, 450775, 9780504, 1795265022}) if(a % n) {",
+      "    for(ll k = n - 1;;k /= 2) {",
+      "      ll tmp = _pow(a, k, n);",
+      "      if(tmp == n - 1) break;",
+      "      if(k % 2) {",
+      "        if(tmp == 1) break;",
+      "        else return false;",
+      "      }",
+      "    }",
+      "  }",
+      "  return true;",
+      "}"
+    ],
+    "description": "miller_rabin.cpp template"
   },
   "const_rmq.cpp": {
     "prefix": "const_rmq.cpp",
@@ -2741,130 +2813,6 @@
     ],
     "description": "bitset_operation.cpp template"
   },
-  "aho_corasick.cpp": {
-    "prefix": "aho_corasick.cpp",
-    "body": [
-      "struct aho_corasick {",
-      "  map<char, aho_corasick*> arr;",
-      "  aho_corasick* fail = nullptr;",
-      "  int have = 0;",
-      "",
-      "  aho_corasick() { }",
-      "  ~aho_corasick() {",
-      "    for(auto [c, nxt] : arr) delete nxt;",
-      "  }",
-      "",
-      "  aho_corasick* child(char c) {",
-      "    if(auto it = arr.find(c);it != arr.end()) return it->second;",
-      "    return nullptr;",
-      "  }",
-      "",
-      "  template <typename I>",
-      "  void insert(I s, I e) {",
-      "    aho_corasick* cur = this;",
-      "    for(;s != e;s++) {",
-      "      aho_corasick* nxt = cur->child(*s);",
-      "      if(nxt == nullptr) {",
-      "        aho_corasick* tmp = new aho_corasick();",
-      "        cur->arr[*s] = tmp;",
-      "        nxt = tmp;",
-      "      }",
-      "      cur = nxt;",
-      "    }",
-      "    cur->have++;",
-      "  }",
-      "",
-      "  void init() {",
-      "    queue<aho_corasick*> q;",
-      "    q.push(this);",
-      "    while(q.size()) {",
-      "      aho_corasick *cur = q.front();",
-      "      q.pop();",
-      "      for(auto [c, nxt] : cur->arr) {",
-      "        if(cur == this) nxt->fail = this;",
-      "        else {",
-      "          aho_corasick *dest = cur->fail;",
-      "          while(dest != this && !dest->child(c)) dest = dest->fail;",
-      "          if(dest->child(c)) dest = dest->child(c);",
-      "          else dest = this;",
-      "          nxt->fail = dest;",
-      "        }",
-      "        nxt->have += nxt->fail->have;",
-      "        q.push(nxt);",
-      "      }",
-      "    }",
-      "  }",
-      "",
-      "  template <typename I>",
-      "  int count(I s, I e) {",
-      "    int tmp = 0;",
-      "    aho_corasick *cur = this;",
-      "    for(;s != e;s++) {",
-      "      aho_corasick *nxt = cur->child(*s);",
-      "      while(cur != this && !nxt) {",
-      "        cur = cur->fail;",
-      "        nxt = cur->child(*s);",
-      "      }",
-      "      if(nxt) cur = nxt;",
-      "      tmp += cur->have;",
-      "    }",
-      "    return tmp;",
-      "  }",
-      "};"
-    ],
-    "description": "aho_corasick.cpp template"
-  },
-  "hashing.cpp": {
-    "prefix": "hashing.cpp",
-    "body": [
-      "template <int P, int M>",
-      "class hashing {",
-      "  const int sz;",
-      "  vector<int> arr, _pow;",
-      "",
-      "public:",
-      "  template <typename I>",
-      "  hashing(I s, I e) : sz(distance(s, e)), arr(sz + 1), _pow(sz + 1) {",
-      "    _pow[0] = 1;",
-      "    for(int i = 1;i <= sz;i++) {",
-      "      arr[i] = ((ll)arr[i - 1] * P + *s++) % M;",
-      "      _pow[i] = (ll)_pow[i-1] * P % M;",
-      "    }",
-      "  }",
-      "  ll operator() (int s, int e) {",
-      "    s++; e++;",
-      "    return ((arr[e] - (ll)arr[s - 1] * _pow[e - s + 1]) % M + M) % M;",
-      "  }",
-      "};",
-      "",
-      "// 1e9+7, 1'234'567'891, (1LL<<63)-25"
-    ],
-    "description": "hashing.cpp template"
-  },
-  "manacher.cpp": {
-    "prefix": "manacher.cpp",
-    "body": [
-      "template <typename T, typename I>",
-      "vector<int> manacher(I s, I e) {",
-      "  int sz = distance(s, e) * 2 + 1;",
-      "  vector<T> str(sz);",
-      "  vector<int> arr(sz);",
-      "  for(int i = 1;s != e;i += 2) str[i] = *s++;",
-      "  int m = 0, r = 0;",
-      "  for(int i = 0;i < sz;i++) {",
-      "    int l = m * 2 - i;",
-      "    if(i < r) arr[i] = min(r - i, arr[l]);",
-      "    while(i - arr[i] - 1 >= 0 && i + arr[i] + 1 < sz && str[i - arr[i] - 1] == str[i + arr[i] + 1]) arr[i]++;",
-      "    if(i + arr[i] > r) {",
-      "      m = i;",
-      "      r = i + arr[i];",
-      "    }",
-      "  }",
-      "  return arr;",
-      "}"
-    ],
-    "description": "manacher.cpp template"
-  },
   "kmp.cpp": {
     "prefix": "kmp.cpp",
     "body": [
@@ -3029,5 +2977,129 @@
       "};"
     ],
     "description": "trie-vector.cpp template"
+  },
+  "aho_corasick.cpp": {
+    "prefix": "aho_corasick.cpp",
+    "body": [
+      "// TODO",
+      "",
+      "struct aho_corasick {",
+      "  map<char, aho_corasick*> arr;",
+      "  aho_corasick* fail = nullptr;",
+      "  int have = 0;",
+      "",
+      "  aho_corasick() { }",
+      "  ~aho_corasick() {",
+      "    for(auto [c, nxt] : arr) delete nxt;",
+      "  }",
+      "",
+      "  aho_corasick* child(char c) {",
+      "    if(auto it = arr.find(c);it != arr.end()) return it->second;",
+      "    return nullptr;",
+      "  }",
+      "",
+      "  template <typename I>",
+      "  void insert(I s, I e) {",
+      "    aho_corasick* cur = this;",
+      "    for(;s != e;s++) {",
+      "      aho_corasick* nxt = cur->child(*s);",
+      "      if(nxt == nullptr) {",
+      "        aho_corasick* tmp = new aho_corasick();",
+      "        cur->arr[*s] = tmp;",
+      "        nxt = tmp;",
+      "      }",
+      "      cur = nxt;",
+      "    }",
+      "    cur->have++;",
+      "  }",
+      "",
+      "  void init() {",
+      "    queue<aho_corasick*> q;",
+      "    q.push(this);",
+      "    while(q.size()) {",
+      "      aho_corasick *cur = q.front();",
+      "      q.pop();",
+      "      for(auto [c, nxt] : cur->arr) {",
+      "        if(cur == this) nxt->fail = this;",
+      "        else {",
+      "          aho_corasick *dest = cur->fail;",
+      "          while(dest != this && !dest->child(c)) dest = dest->fail;",
+      "          if(dest->child(c)) dest = dest->child(c);",
+      "          else dest = this;",
+      "          nxt->fail = dest;",
+      "        }",
+      "        nxt->have += nxt->fail->have;",
+      "        q.push(nxt);",
+      "      }",
+      "    }",
+      "  }",
+      "",
+      "  template <typename I>",
+      "  int count(I s, I e) {",
+      "    int tmp = 0;",
+      "    aho_corasick *cur = this;",
+      "    for(;s != e;s++) {",
+      "      aho_corasick *nxt = cur->child(*s);",
+      "      while(cur != this && !nxt) {",
+      "        cur = cur->fail;",
+      "        nxt = cur->child(*s);",
+      "      }",
+      "      if(nxt) cur = nxt;",
+      "      tmp += cur->have;",
+      "    }",
+      "    return tmp;",
+      "  }",
+      "};"
+    ],
+    "description": "aho_corasick.cpp template"
+  },
+  "hashing.cpp": {
+    "prefix": "hashing.cpp",
+    "body": [
+      "template <int P, int M>",
+      "class hashing {",
+      "  const int sz;",
+      "  vector<int> arr, _pow;",
+      "",
+      "public:",
+      "  template <typename I>",
+      "  hashing(I s, I e) : sz(distance(s, e)), arr(sz + 1), _pow(sz + 1) {",
+      "    _pow[0] = 1;",
+      "    for(int i = 1;i <= sz;i++) {",
+      "      arr[i] = ((ll)arr[i - 1] * P + *s++) % M;",
+      "      _pow[i] = (ll)_pow[i-1] * P % M;",
+      "    }",
+      "  }",
+      "  ll operator() (int s, int e) {",
+      "    s++; e++;",
+      "    return ((arr[e] - (ll)arr[s - 1] * _pow[e - s + 1]) % M + M) % M;",
+      "  }",
+      "};"
+    ],
+    "description": "hashing.cpp template"
+  },
+  "manacher.cpp": {
+    "prefix": "manacher.cpp",
+    "body": [
+      "template <typename I>",
+      "vector<int> manacher(I s, I e) {",
+      "  int sz = distance(s, e) * 2 + 1;",
+      "  vector<iterator_traits<I>::value_type> str(sz);",
+      "  vector<int> arr(sz);",
+      "  for(int i = 1;s != e;i += 2) str[i] = *s++;",
+      "  int m = 0, r = 0;",
+      "  for(int i = 0;i < sz;i++) {",
+      "    int l = m * 2 - i;",
+      "    if(i < r) arr[i] = min(r - i, arr[l]);",
+      "    while(i - arr[i] - 1 >= 0 && i + arr[i] + 1 < sz && str[i - arr[i] - 1] == str[i + arr[i] + 1]) arr[i]++;",
+      "    if(i + arr[i] > r) {",
+      "      m = i;",
+      "      r = i + arr[i];",
+      "    }",
+      "  }",
+      "  return arr;",
+      "}"
+    ],
+    "description": "manacher.cpp template"
   }
 }

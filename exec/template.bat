@@ -1,13 +1,13 @@
 @ECHO OFF
 
-set /p str="template: "
+set /p str="base: "
 
-if exist "template\%str%.cpp" (
-  copy /Y "template\%str%.cpp" main.cpp > nul
+if exist "base\%str%.cpp" (
+  copy /Y "base\%str%.cpp" main.cpp > nul
   code main.cpp
-) else if exist "template\%str%.c" (
-  copy /Y "template\%str%.c" main.c > nul
+) else if exist "base\%str%.c" (
+  copy /Y "base\%str%.c" main.c > nul
   code main.c
 ) else (
-  echo no template named %str%
+  echo no base named %str%
 )
