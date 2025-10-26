@@ -287,16 +287,6 @@
     ],
     "description": "area-double.cpp template"
   },
-  "ccw-double.cpp": {
-    "prefix": "ccw-double.cpp",
-    "body": [
-      "int ccw(point a, point b, point c) {",
-      "  double s = (b - a) / (c - b);",
-      "  return (s > 0) - (s < 0);",
-      "}"
-    ],
-    "description": "ccw-double.cpp template"
-  },
   "cross-double.cpp": {
     "prefix": "cross-double.cpp",
     "body": [
@@ -427,6 +417,16 @@
       "};"
     ],
     "description": "rotating_calipers-double.cpp template"
+  },
+  "ccw-double.cpp": {
+    "prefix": "ccw-double.cpp",
+    "body": [
+      "int ccw(point a, point b, point c) {",
+      "  double s = (b - a) / (c - a);",
+      "  return (s > 0) - (s < 0);",
+      "}"
+    ],
+    "description": "ccw-double.cpp template"
   },
   "lca.cpp": {
     "prefix": "lca.cpp",
@@ -1492,21 +1492,6 @@
     ],
     "description": "polynomial.cpp template"
   },
-  "combination-modint.cpp": {
-    "prefix": "combination-modint.cpp",
-    "body": [
-      "modint combination(int n, int r) {",
-      "  if(r > n - r) r = n - r;",
-      "  modint x = 1, y = 1;",
-      "  for(int i = 0;i < r;i++) {",
-      "    x = x * (n - i);",
-      "    y = y * (i + 1);",
-      "  }",
-      "  return x / y;",
-      "}"
-    ],
-    "description": "combination-modint.cpp template"
-  },
   "combination.cpp": {
     "prefix": "combination.cpp",
     "body": [
@@ -1537,33 +1522,6 @@
       "};"
     ],
     "description": "combination.cpp template"
-  },
-  "modint.cpp": {
-    "prefix": "modint.cpp",
-    "body": [
-      "template <int mod>",
-      "class _modint {",
-      "  ll val;",
-      "",
-      "public:",
-      "  _modint(ll n = 0) : val((n %= mod) < 0 ? n + mod : n) {}",
-      "",
-      "  _modint operator+ (const _modint v) { return _modint(val + v.val); }",
-      "  _modint operator- (const _modint v) { return _modint(val - v.val); }",
-      "  _modint operator* (const _modint v) { return _modint(val * v.val); }",
-      "  _modint operator/ (const _modint v) { return _modint(val * _pow(v.val, mod - 2)); }",
-      "  _modint operator- () { return _modint(val ? mod - val : val); }",
-      "",
-      "  friend istream& operator>> (istream& cin, _modint& v) {",
-      "    cin >> v.val;",
-      "    if((v.val %= mod) < 0) v.val += mod;",
-      "    return cin;",
-      "  }",
-      "  friend ostream& operator<< (ostream& cout, const _modint v) { return cout << v.val; }",
-      "};",
-      "using modint = _modint<mod>"
-    ],
-    "description": "modint.cpp template"
   },
   "steinhaus_johnson_trotter.cpp": {
     "prefix": "steinhaus_johnson_trotter.cpp",
@@ -1615,24 +1573,18 @@
       "class fraction {",
       "  ll n, d;",
       "public:",
-      "  fraction(ll a = 0, ll b = 1) : n(a), d(b) {",
-      "    assert(d != 0);",
-      "    ll g = gcd(a, b);",
-      "    n /= g;",
-      "    d /= g;",
-      "  }",
+      "  fraction(ll a = 0, ll b = 1) : n(a / gcd(a, b)), d(b / gcd(a, b)) {}",
+      "  fraction operator+ (const fraction v) const { return fraction(n * v.d + d * v.n, d * v.d); }",
+      "  fraction operator+= (const fraction v) { return *this = *this + v; }",
+      "  fraction operator- (const fraction v) const { return fraction(n * v.d - d * v.n, d * v.d); }",
+      "  fraction operator-= (const fraction v) { return *this = *this - v; }",
+      "  fraction operator* (const fraction v) const { return fraction(n * v.n, d * v.d); }",
+      "  fraction operator*= (const fraction v) { return *this = *this * v; }",
+      "  fraction operator/ (const fraction v) const { return fraction(n * v.d, d * v.n); }",
+      "  fraction operator/= (const fraction v) { return *this = *this / v; }",
+      "  fraction operator- () const { return fraction(-n, d); }",
       "",
-      "  fraction operator+ (fraction v) { return fraction(n * v.d + d * v.n, d * v.d); }",
-      "  fraction operator+= (fraction v) { return *this = *this + v; }",
-      "  fraction operator- (fraction v) { return fraction(n * v.d - d * v.n, d * v.d); }",
-      "  fraction operator-= (fraction v) { return *this = *this - v; }",
-      "  fraction operator* (fraction v) { return fraction(n * v.n, d * v.d); }",
-      "  fraction operator*= (fraction v) { return *this = *this * v; }",
-      "  fraction operator/ (fraction v) { return fraction(n * v.d, d * v.n); }",
-      "  fraction operator/= (fraction v) { return *this = *this / v; }",
-      "  fraction operator- () { return fraction(-n, d); }",
-      "",
-      "  strong_ordering operator<=> (fraction v) { return n * v.d <=> d * v.n; }",
+      "  auto operator<=> (fraction v) { return n * v.d <=> d * v.n; }",
       "",
       "  explicit operator bool() { return n != 0; }",
       "  explicit operator double() { return (double)n / d; }",
@@ -1641,7 +1593,7 @@
       "    v.d = 1;",
       "    return cin >> v.n;",
       "  }",
-      "  friend ostream& operator<< (ostream& cout, fraction& v) { return cout << v.n << '/'<< v.d; }",
+      "  friend ostream& operator<< (ostream& cout, fraction& v) { return cout << v.n << '/' << v.d; }",
       "",
       "  friend ll floor(fraction v) { return v.n / v.d - ((v.n % v.d != 0) && ((v.n < 0) != (v.d < 0))); }",
       "  friend ll ceil(fraction v) { return v.n / v.d + ((v.n % v.d != 0) && ((v.n > 0) == (v.d > 0))); }",
@@ -1650,6 +1602,67 @@
       "};"
     ],
     "description": "fraction.cpp template"
+  },
+  "_pow-constant_mod.cpp": {
+    "prefix": "_pow-constant_mod.cpp",
+    "body": [
+      "template <ll mod>",
+      "ll _pow(__int128 n, ll exp) {",
+      "  __int128 tmp = 1;",
+      "  for(n %= mod;exp;exp /= 2) {",
+      "    if(exp & 1) tmp = tmp * n % mod;",
+      "    n = (n * n) % mod;",
+      "  }",
+      "  return tmp;",
+      "}"
+    ],
+    "description": "_pow-constant_mod.cpp template"
+  },
+  "combination-modint.cpp": {
+    "prefix": "combination-modint.cpp",
+    "body": [
+      "modint comb(int n, int r) {",
+      "  if(n < r) return 0;",
+      "  if(r > n - r) r = n - r;",
+      "  modint x = 1, y = 1;",
+      "  for(int i = 0;i < r;i++) {",
+      "    x *= (n - i);",
+      "    y *= (i + 1);",
+      "  }",
+      "  return x / y;",
+      "}"
+    ],
+    "description": "combination-modint.cpp template"
+  },
+  "modint.cpp": {
+    "prefix": "modint.cpp",
+    "body": [
+      "template <int mod>",
+      "class _modint {",
+      "  ll val;",
+      "",
+      "public:",
+      "  _modint(ll n = 0) : val((n %= mod) < 0 ? n + mod : n) {}",
+      "  _modint operator+ (const _modint v) const { return _modint(val + v.val); }",
+      "  _modint operator+= (const _modint v) { return *this = _modint(val + v.val); }",
+      "  _modint operator- (const _modint v) const { return _modint(val - v.val); }",
+      "  _modint operator-= (const _modint v) { return *this = _modint(val - v.val); }",
+      "  _modint operator* (const _modint v) const { return _modint(val * v.val); }",
+      "  _modint operator*= (const _modint v) { return *this = _modint(val * v.val); }",
+      "  _modint operator/ (const _modint v) const { return _modint(val * _pow<mod>(v.val, mod - 2)); }",
+      "  _modint operator/= (const _modint v) { return *this = _modint(val * _pow<mod>(v.val, mod - 2)); }",
+      "  _modint operator- () { return _modint(val ? mod - val : val); }",
+      "",
+      "  friend istream& operator>> (istream& cin, _modint& v) {",
+      "    ll a; cin >> a;",
+      "    v = _modint(a);",
+      "    return cin;",
+      "  }",
+      "  friend ostream& operator<< (ostream& cout, _modint v) { return cout << v.val; }",
+      "};",
+      "using modint = _modint<mod>;"
+    ],
+    "description": "modint.cpp template"
   },
   "pollard_rho.cpp": {
     "prefix": "pollard_rho.cpp",
