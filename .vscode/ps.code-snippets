@@ -173,82 +173,6 @@
     ],
     "description": "convex_hull.cpp template"
   },
-  "point_in_polygon.cpp": {
-    "prefix": "point_in_polygon.cpp",
-    "body": [
-      "bool point_in_polygon(polygon& poly, point cur) {",
-      "  int cnt = 0;",
-      "  for(int i = 0;i < poly.size();i++) {",
-      "    point p1 = poly[i], p2 = poly[(i + 1) % poly.size()];",
-      "    if(p1.y > p2.y) swap(p1, p2);",
-      "    if(ccw(p1, cur, p2) == 0 && p1.y <= cur.y && cur.y <= p2.y && min(p1.x, p2.x) <= cur.x && cur.x <= max(p1.x, p2.x)) return true;",
-      "    if(p1.y <= cur.y && cur.y < p2.y && ccw(p1, p2, cur) > 0) cnt++;",
-      "  }",
-      "  return cnt % 2;",
-      "}",
-      "",
-      "bool point_in_convex_polygon(polygon& poly, point cur) {",
-      "  if(ccw(poly[0], poly[1], cur) < 0) return false;",
-      "  int l = 1, r = poly.size() - 1;",
-      "  while(l < r) {",
-      "    int m = (l + r + 1) / 2;",
-      "    if(ccw(poly[0], poly[m], cur) >= 0) l = m;",
-      "    else r = m - 1;",
-      "  }",
-      "  if(l == poly.size() - 1) return ccw(poly[0], poly.back(), cur) == 0 && poly[0] <= cur && cur <= poly.back();",
-      "  return ccw(poly[0], poly[1], cur) >= 0 && ccw(poly[l], poly[l + 1], cur) >= 0 && ccw(poly[l + 1], poly[0], cur) >= 0;",
-      "}"
-    ],
-    "description": "point_in_polygon.cpp template"
-  },
-  "area-double.cpp": {
-    "prefix": "area-double.cpp",
-    "body": [
-      "double area(polygon& poly) {",
-      "  double tmp = 0;",
-      "  for(int i = 0;i < poly.size();i++) {",
-      "    point bef = i ? poly[i - 1] : poly.back();",
-      "    tmp += bef.x * poly[i].y - bef.y * poly[i].x;",
-      "  }",
-      "  return abs(tmp) / 2;",
-      "}"
-    ],
-    "description": "area-double.cpp template"
-  },
-  "area.cpp": {
-    "prefix": "area.cpp",
-    "body": [
-      "ll area2(polygon& poly) {",
-      "  ll tmp = 0;",
-      "  for(int i = 0;i < poly.size();i++) {",
-      "    point bef = i ? poly[i - 1] : poly.back();",
-      "    tmp += (ll)bef.x * poly[i].y - (ll)bef.y * poly[i].x;",
-      "  }",
-      "  return abs(tmp);",
-      "}"
-    ],
-    "description": "area.cpp template"
-  },
-  "ccw-double.cpp": {
-    "prefix": "ccw-double.cpp",
-    "body": [
-      "int ccw(point a, point b, point c) {",
-      "  double s = (b - a) / (c - b);",
-      "  return (s > 0) - (s < 0);",
-      "}"
-    ],
-    "description": "ccw-double.cpp template"
-  },
-  "ccw.cpp": {
-    "prefix": "ccw.cpp",
-    "body": [
-      "int ccw(point a, point b, point c) {",
-      "  ll s = (ll)(b.x - a.x) * (c.y - a.y) - (ll)(b.y - a.y) * (c.x - a.x);",
-      "  return (s > 0) - (s < 0);",
-      "}"
-    ],
-    "description": "ccw.cpp template"
-  },
   "cross.cpp": {
     "prefix": "cross.cpp",
     "body": [
@@ -271,41 +195,107 @@
     ],
     "description": "cross.cpp template"
   },
-  "rotating_calipers-pair.cpp": {
-    "prefix": "rotating_calipers-pair.cpp",
+  "area.cpp": {
+    "prefix": "area.cpp",
     "body": [
-      "pair<point, point> rotating_calipers(polygon& poly) {",
-      "  int sz = poly.size();",
-      "  pair<ll, pair<point, point>> tmp = {dist2(poly[0] - poly[1]), {poly[0], poly[1]}};",
-      "  for(int i = 0, j = 0;i < sz;i++) {",
-      "    while(j < sz * 2 && ccw(poly[i], poly[(i + 1) % sz], poly[(i + 1) % sz] + poly[(j + 1) % sz] - poly[j % sz]) > 0) {",
-      "      tmp = max(tmp, {dist2(poly[i] - poly[j % sz]), {poly[i], poly[j % sz]}});",
-      "      j = (j + 1) % sz;",
-      "    }",
-      "    tmp = max(tmp, {dist2(poly[i] - poly[j % sz]), {poly[i], poly[j % sz]}});",
-      "  }",
-      "  return tmp.second;",
-      "};"
+      "double area(polygon& poly) {",
+      "  ll tmp = 0;",
+      "  for(int i = 0;i < poly.size();i++) tmp += poly[i] / poly[(i + 1) % poly.size()];",
+      "  return abs(tmp);",
+      "}"
     ],
-    "description": "rotating_calipers-pair.cpp template"
+    "description": "area.cpp template"
+  },
+  "ccw.cpp": {
+    "prefix": "ccw.cpp",
+    "body": [
+      "int ccw(point a, point b, point c) {",
+      "  ll s = (b - a) / (c - a);",
+      "  return (s > 0) - (s < 0);",
+      "}"
+    ],
+    "description": "ccw.cpp template"
+  },
+  "geometry.cpp": {
+    "prefix": "geometry.cpp",
+    "body": [
+      "struct point {",
+      "  int x, y;",
+      "  point operator+ (const point v) const { return {x + v.x, y + v.y}; }",
+      "  point operator- (const point v) const { return {x - v.x, y - v.y}; }",
+      "  ll operator* (const point v) const { return (ll)x * v.x + (ll)y * v.y; }",
+      "  ll operator/ (const point v) const { return (ll)x * v.y - (ll)y * v.x; }",
+      "  bool operator== (const point v) const { return x == v.x && y == v.y; }",
+      "  bool operator!= (const point v) const { return !(*this == v); }",
+      "  bool operator< (const point v) const { return x != v.x ? x < v.x : y < v.y; }",
+      "  ll size() const { return (ll)x * x + (ll)y * y; }",
+      "  friend istream& operator>> (istream& cin, point& v) { return cin >> v.x >> v.y; }",
+      "  friend ostream& operator<< (ostream& cout, point& v) { return cout << v.x << ' ' << v.y; }",
+      "};",
+      "struct line {",
+      "  point s, t;",
+      "  bool sgn() const { return s.y == t.y ? s.x < t.x : s.y < t.y; }",
+      "  bool operator< (const line v) const { return sgn() != v.sgn() ? sgn() < v.sgn() : (t - s) / (v.t - v.s) > 0; }",
+      "  friend ostream& operator<< (ostream& cout, line& v) { return cout << v.s << ' ' << v.t; }",
+      "};",
+      "using polygon = vector<point>;"
+    ],
+    "description": "geometry.cpp template"
+  },
+  "point_in_polygon.cpp": {
+    "prefix": "point_in_polygon.cpp",
+    "body": [
+      "bool point_in_polygon(polygon& poly, point cur) {",
+      "  int cnt = 0;",
+      "  for(int i = 0;i < poly.size();i++) {",
+      "    point p1 = poly[i], p2 = poly[(i + 1) % poly.size()];",
+      "    if(p1.y > p2.y) swap(p1, p2);",
+      "    if(ccw(p1, cur, p2) == 0 && p1.y <= cur.y && cur.y <= p2.y && min(p1.x, p2.x) <= cur.x && cur.x <= max(p1.x, p2.x)) return true;",
+      "    if(p1.y <= cur.y && cur.y < p2.y && ccw(p1, p2, cur) > 0) cnt++;",
+      "  }",
+      "  return cnt % 2;",
+      "}"
+    ],
+    "description": "point_in_polygon.cpp template"
   },
   "rotating_calipers.cpp": {
     "prefix": "rotating_calipers.cpp",
     "body": [
-      "ll rotating_calipers(polygon& poly) {",
+      "pair<ll, line> rotating_calipers(polygon& poly) {",
       "  int sz = poly.size();",
-      "  ll tmp = dist2(poly[0] - poly[1]);",
+      "  pair<ll, line> tmp = {(poly[0] - poly[1]).size(), {poly[0], poly[1]}};",
       "  for(int i = 0, j = 0;i < sz;i++) {",
-      "    while(j < sz * 2 && ccw(poly[i], poly[(i + 1) % sz], poly[(i + 1) % sz] + poly[(j + 1) % sz] - poly[j % sz]) > 0) {",
-      "      tmp = max(tmp, dist2(poly[i] - poly[j % sz]));",
+      "    while(ccw(poly[i], poly[(i + 1) % sz], poly[(i + 1) % sz] + poly[(j + 1) % sz] - poly[j % sz]) > 0) {",
+      "      tmp = max(tmp, {(poly[i] - poly[j % sz]).size(), {poly[i], poly[j % sz]}});",
       "      j = (j + 1) % sz;",
       "    }",
-      "    tmp = max(tmp, dist2(poly[i] - poly[j % sz]));",
+      "    tmp = max(tmp, {(poly[i] - poly[j % sz]).size(), {poly[i], poly[j % sz]}});",
       "  }",
       "  return tmp;",
       "};"
     ],
     "description": "rotating_calipers.cpp template"
+  },
+  "area-double.cpp": {
+    "prefix": "area-double.cpp",
+    "body": [
+      "double area(polygon& poly) {",
+      "  double tmp = 0;",
+      "  for(int i = 0;i < poly.size();i++) tmp += poly[i] / poly[(i + 1) % poly.size()];",
+      "  return abs(tmp) / 2;",
+      "}"
+    ],
+    "description": "area-double.cpp template"
+  },
+  "ccw-double.cpp": {
+    "prefix": "ccw-double.cpp",
+    "body": [
+      "int ccw(point a, point b, point c) {",
+      "  double s = (b - a) / (c - b);",
+      "  return (s > 0) - (s < 0);",
+      "}"
+    ],
+    "description": "ccw-double.cpp template"
   },
   "cross-double.cpp": {
     "prefix": "cross-double.cpp",
@@ -323,6 +313,33 @@
       "}"
     ],
     "description": "cross-double.cpp template"
+  },
+  "geometry-double.cpp": {
+    "prefix": "geometry-double.cpp",
+    "body": [
+      "struct point {",
+      "  double x, y;",
+      "  point operator+ (const point v) const { return {x + v.x, y + v.y}; }",
+      "  point operator- (const point v) const { return {x - v.x, y - v.y}; }",
+      "  double operator* (const point v) const { return x * v.x + y * v.y; }",
+      "  double operator/ (const point v) const { return x * v.y - y * v.x; }",
+      "  point operator* (const double v) const { return {x * v, y * v}; }",
+      "  bool operator== (const point v) const { return abs(x - v.x) < 1e-9 && abs(y - v.y) < 1e-9; }",
+      "  bool operator!= (const point v) const { return !(*this == v); }",
+      "  bool operator< (const point v) const { return x != v.x ? x < v.x : y < v.y; }",
+      "  double size() const { return hypot(x, y); }",
+      "  friend istream& operator>> (istream& cin, point& v) { return cin >> v.x >> v.y; }",
+      "  friend ostream& operator<< (ostream& cout, point& v) { return cout << v.x << ' ' << v.y; }",
+      "};",
+      "struct line {",
+      "  point s, t;",
+      "  bool sgn() const { return s.y == t.y ? s.x < t.x : s.y < t.y; }",
+      "  bool operator< (const line v) const { return sgn() != v.sgn() ? sgn() < v.sgn() : (t - s) / (v.t - v.s) > 0; }",
+      "  friend ostream& operator<< (ostream& cout, line& v) { return cout << v.s << ' ' << v.t; }",
+      "};",
+      "using polygon = vector<point>;"
+    ],
+    "description": "geometry-double.cpp template"
   },
   "intersection-double.cpp": {
     "prefix": "intersection-double.cpp",
@@ -376,46 +393,40 @@
     ],
     "description": "intersection-lines.cpp template"
   },
-  "point-double.cpp": {
-    "prefix": "point-double.cpp",
+  "point_in_convex_polygon.cpp": {
+    "prefix": "point_in_convex_polygon.cpp",
     "body": [
-      "struct point {",
-      "  double x, y;",
-      "  point operator+ (const point v) const { return {x + v.x, y + v.y}; }",
-      "  point operator- (const point v) const { return {x - v.x, y - v.y}; }",
-      "  double operator/ (const point v) const { return x * v.y - y * v.x; }",
-      "  point operator* (const double v) const { return {x * v, y * v}; }",
-      "  point operator/ (const double v) const { return {x / v, y / v}; }",
-      "  bool operator< (const point v) const { return x != v.x ? x < v.x : y < v.y; }",
-      "  double size() const { return hypot(x, y); }",
-      "  friend istream& operator>> (istream& cin, point& v) { return cin >> v.x >> v.y; }",
-      "  friend ostream& operator<< (ostream& cout, point& v) { return cout << v.x << ' '<< v.y; }",
-      "};",
-      "struct line { point s, t; };",
-      "using polygon = vector<point>;"
+      "bool point_in_convex_polygon(polygon& poly, point cur) {",
+      "  if(ccw(poly[0], poly[1], cur) < 0) return false;",
+      "  int l = 1, r = poly.size() - 1;",
+      "  while(l < r) {",
+      "    int m = (l + r + 1) / 2;",
+      "    if(ccw(poly[0], poly[m], cur) >= 0) l = m;",
+      "    else r = m - 1;",
+      "  }",
+      "  if(l == poly.size() - 1) return ccw(poly[0], poly.back(), cur) == 0 && poly[0] <= cur && cur <= poly.back();",
+      "  return ccw(poly[0], poly[1], cur) >= 0 && ccw(poly[l], poly[l + 1], cur) >= 0 && ccw(poly[l + 1], poly[0], cur) >= 0;",
+      "}"
     ],
-    "description": "point-double.cpp template"
+    "description": "point_in_convex_polygon.cpp template"
   },
-  "point.cpp": {
-    "prefix": "point.cpp",
+  "rotating_calipers-double.cpp": {
+    "prefix": "rotating_calipers-double.cpp",
     "body": [
-      "struct point {",
-      "  int x, y;",
-      "  point operator+ (const point v) const { return {x + v.x, y + v.y}; }",
-      "  point operator- (const point v) const { return {x - v.x, y - v.y}; }",
-      "  double operator/ (const point v) const { return x * v.y - y * v.x; }",
-      "  bool operator== (const point v) const { return x == v.x && y == v.y; }",
-      "  bool operator!= (const point v) const { return x != v.x || y != v.y; }",
-      "  bool operator< (const point v) const { return x != v.x ? x < v.x : y < v.y; }",
-      "  bool operator<= (const point v) const { return *this < v || *this == v; }",
-      "  ll size() const { return (ll)x * x + (ll)y * y; }",
-      "  friend istream& operator>> (istream& cin, point& v) { return cin >> v.x >> v.y; }",
-      "  friend ostream& operator<< (ostream& cout, point& v) { return cout << v.x << ' '<< v.y; }",
-      "};",
-      "struct line { point s, t; };",
-      "using polygon = vector<point>;"
+      "pair<double, line> rotating_calipers(polygon& poly) {",
+      "  int sz = poly.size();",
+      "  pair<double, line> tmp = {(poly[0] - poly[1]).size(), {poly[0], poly[1]}};",
+      "  for(int i = 0, j = 0;i < sz;i++) {",
+      "    while(ccw(poly[i], poly[(i + 1) % sz], poly[(i + 1) % sz] + poly[(j + 1) % sz] - poly[j % sz]) > 0) {",
+      "      tmp = max(tmp, {(poly[i] - poly[j % sz]).size(), {poly[i], poly[j % sz]}});",
+      "      j = (j + 1) % sz;",
+      "    }",
+      "    tmp = max(tmp, {(poly[i] - poly[j % sz]).size(), {poly[i], poly[j % sz]}});",
+      "  }",
+      "  return tmp;",
+      "};"
     ],
-    "description": "point.cpp template"
+    "description": "rotating_calipers-double.cpp template"
   },
   "lca.cpp": {
     "prefix": "lca.cpp",
