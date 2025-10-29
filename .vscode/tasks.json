@@ -18,15 +18,6 @@
 				"focus": true,
 				"showReuseMessage": false
 			}
-		},
-		{
-			"type": "shell",
-			"label": "workspace template",
-			"command": "${workspaceFolder}/exec/template.bat",
-			"presentation": {
-				"focus": true,
-				"showReuseMessage": false
-			}
 		}
 	]
 }
