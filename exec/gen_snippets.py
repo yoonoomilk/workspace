@@ -19,11 +19,12 @@ with zipfile.ZipFile(io.BytesIO(response.content)) as z:
       with z.open(file) as f:
         content = f.read()
       body = [i.decode("utf-8") for i in content.splitlines()]
-      name = os.path.basename(file)
+      name = os.path.basename(file)[:-4]
       snippets[name] = {
-        "prefix": name,
+        "prefix": f"ps-{name}",
         "body": body,
-        "description": f"{name} template"
+        "description": f"{name} template",
+        "scope" : "cpp"
       }
 
 with open(OUTPUT_FILE, "w", encoding="utf-8") as f:

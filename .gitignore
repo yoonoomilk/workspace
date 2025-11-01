@@ -9,3 +9,4 @@ exec/main.exe
 
 .vscode/settings.json
 .vscode/c_cpp_properties.json
+.vscode/ps-template.code-snippets

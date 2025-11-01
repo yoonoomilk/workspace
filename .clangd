@@ -1,0 +1,15 @@
+CompileFlags:
+  Add:
+    - --target=x86_64-w64-mingw32
+    - -O2
+    - -Wall
+    - -Wno-sign-compare
+    - -Wno-char-subscripts
+    - -Wno-reorder
+    - -Wno-parentheses
+    - -Wno-unknown-pragmas
+    - -static
+    - -std=gnu++26
+    - -lm
+Completion:
+  HeaderInsertion: Never
