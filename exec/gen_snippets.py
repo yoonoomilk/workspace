@@ -6,6 +6,7 @@ import os
 
 TEMPLATE_URL = "https://github.com/yoonoomilk/ps/archive/refs/heads/main.zip"
 OUTPUT_FILE = "./.vscode/ps-template.code-snippets"
+EXTS = ["c", "cpp"]
 
 snippets = {}
 
@@ -15,16 +16,16 @@ response.raise_for_status()
 with zipfile.ZipFile(io.BytesIO(response.content)) as z:
   files = z.namelist()
   for file in files:
-    if file.endswith(".cpp") and file.startswith("ps-main/template/"):
+    if any(map(lambda x: file.endswith(f".{x}"), EXTS)) and file.startswith("ps-main/template/"):
       with z.open(file) as f:
         content = f.read()
       body = [i.decode("utf-8") for i in content.splitlines()]
-      name = os.path.basename(file)[:-4]
+      name, ext = os.path.basename(file).split(".")
       snippets[name] = {
         "prefix": f"ps-{name}",
         "body": body,
         "description": f"{name} template",
-        "scope" : "cpp"
+        "scope" : ext
       }
 
 with open(OUTPUT_FILE, "w", encoding="utf-8") as f:
