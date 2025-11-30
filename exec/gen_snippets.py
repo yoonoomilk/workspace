@@ -22,7 +22,7 @@ with zipfile.ZipFile(io.BytesIO(response.content)) as z:
       body = [i.decode("utf-8") for i in content.splitlines()]
       name, ext = os.path.basename(file).split(".")
       snippets[name] = {
-        "prefix": f"ps-{name}",
+        "prefix": f"ps::{name}",
         "body": body,
         "description": f"{name} template",
         "scope" : ext
