@@ -2,11 +2,9 @@ stdin.txt
 stdout.txt
 
 main.cpp
-main.c
 
 exec/backup.cpp
 exec/main.exe
 
 .vscode/settings.json
-.vscode/c_cpp_properties.json
-.vscode/ps-template.code-snippets
+.vscode/ps-snippets.code-snippets
