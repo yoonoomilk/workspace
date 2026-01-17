@@ -28,7 +28,7 @@ with zipfile.ZipFile(io.BytesIO(response.content)) as z:
               i.decode("utf-8").startswith("#pragma once")
           )
       ]
-      if (body[0] == ""):
+      if body[0] == "":
         body.pop(0)
       snippets[name] = {
           "prefix": f"ps-{name}",
