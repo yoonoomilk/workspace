@@ -7,7 +7,7 @@ CompileFlags:
     - -Wno-parentheses
     - -Wno-unknown-pragmas
     - -lm
-    - -std=gnu++20
+    - -std=gnu++23
     - -ID:/coding/c++/ps/snippets
     - -ID:/coding/c++/ps/include
 Completion:
