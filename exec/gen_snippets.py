@@ -1,6 +1,7 @@
 import io
 import json
 import os
+import re
 import zipfile
 
 import requests
@@ -20,16 +21,15 @@ with zipfile.ZipFile(io.BytesIO(response.content)) as z:
       name, ext = os.path.splitext(os.path.basename(file))
       with z.open(file) as f:
         content = f.read()
-      body = [
-          i.decode("utf-8")
-          for i in content.splitlines()
+      body = "\n".join([
+          i for i in map(lambda x : x.decode("utf-8"), content.splitlines())
           if not (
-              i.decode("utf-8").startswith("#include \"") or
-              i.decode("utf-8").startswith("#pragma once")
+              i.startswith("#include \"") or
+              i.startswith("#pragma once") or
+              i.startswith("// ")
           )
-      ]
-      if body[0] == "":
-        body.pop(0)
+      ]).strip()
+      body = re.sub(r"\n{2,}", r"\n\n", body).split("\n")
       snippets[name] = {
           "prefix": f"ps-{name}",
           "body": body,
