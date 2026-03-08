@@ -1,14 +1,9 @@
 CompileFlags:
   Add:
-    - --target=x86_64-w64-mingw32
     - -Wall
     - -Wno-sign-compare
     - -Wno-char-subscripts
     - -Wno-parentheses
     - -Wno-unknown-pragmas
-    - -lm
     - -std=gnu++23
-    - -ID:/coding/c++/ps/snippets
-    - -ID:/coding/c++/ps/include
-Completion:
-  HeaderInsertion: Never
+    - -ID:/coding/c++/workspace/include
