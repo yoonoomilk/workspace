@@ -5,6 +5,7 @@ main.cpp
 
 exec/backup.cpp
 exec/main.exe
+exec/clock.exe
 
 .vscode/settings.json
 .vscode/ps-snippets.code-snippets
