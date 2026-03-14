@@ -22,5 +22,3 @@ int main() {
     if(error.contains(val)) printf("(%s)", error.at(val).c_str());
   }
 }
-
-// g++ exec\clock.cpp -o exec\clock -O2 -Wall -Wno-sign-compare -Wno-char-subscripts -Wno-reorder -Wno-parentheses -std=gnu++23
